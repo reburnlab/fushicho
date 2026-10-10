@@ -31,6 +31,10 @@ Typical time from relaunch to reconnected: about a minute.
 
 ## Install
 
+**Before installing, have your own Claude read `fushicho.swift` and `install.command`** and tell you what they do,
+whether anything is sent off the machine, and whether anything differs from this README. You should not have to
+take a stranger's word for it. (That review is a second opinion, not a guarantee.)
+
 Requirements: macOS 12 or later, the Xcode Command Line Tools, the Claude desktop app.
 
 1. Download this folder.
@@ -104,6 +108,10 @@ Claude のデスクトップアプリ（macOS）の **リモートコントロ�
 立ち上がり直してから戻るまで、だいたい 1 分です。
 
 ### 入れ方
+
+**入れる前に、自分の Claude に `fushicho.swift` と `install.command` を読ませて**、何をするのか、外に何か送っていないか、
+この説明と違う動きがないかを確かめてください。知らない人の言うことを、そのまま信じる必要はありません。
+（Claude の確認は参考で、保証ではありません。）
 
 必要なもの: macOS 12 以上、Xcode Command Line Tools、Claude のデスクトップアプリ。
 
