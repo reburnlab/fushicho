@@ -74,6 +74,8 @@ tail ~/Library/Logs/fushicho.log                              # what it did
   Reconnecting after a real auto-update relaunch is expected to work the same way, but check your own log the
   first time it happens.
 
+MIT License (see `LICENSE`). Provided as is, without warranty of any kind; use it at your own risk.
+
 Not affiliated with or endorsed by Anthropic. "Claude" is a trademark of Anthropic, PBC.
 
 ---
@@ -141,5 +143,7 @@ tail ~/Library/Logs/fushicho.log                              # やったこと�
 - 確かめた環境: Claude デスクトップ 2.31226.1、macOS 26（Intel と Apple シリコン）。手で終了して開き直した場合と、
   Mac 本体を再起動した場合（ログイン時に自分で立ち上がり、許可も残る）に、つなぎ直すことは確認済み。
   自動アップデートでの立ち上げ直しも同じ動きになるはずですが、最初の 1 回は自分のログで確かめてください
+
+MIT ライセンスです（`LICENSE`）。無保証で、使って起きた不具合や損害について作者は責任を負いません。自分の判断で使ってください。
 
 Anthropic とは無関係の、非公式の道具です。
