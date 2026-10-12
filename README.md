@@ -73,8 +73,10 @@ tail ~/Library/Logs/fushicho.log                              # what it did
   sessions bridged at the same time, the others stay down.
 - It is a workaround. If the app starts restoring Remote Control by itself after a relaunch, you no longer need
   this — uninstall it.
-- Tested with Claude desktop 2.31226.1 on macOS 26 (Intel and Apple silicon). Confirmed: reconnecting after a
-  manual quit and reopen, and after a full restart of the Mac (it starts at login and keeps its permission).
+- Tested with Claude desktop 2.31226.1 on macOS 26, on three Macs: an Intel iMac, an Apple silicon iMac and an
+  Apple silicon MacBook Air. The installer ran unmodified on all three. Confirmed: reconnecting after a manual
+  quit and reopen (all three), and after a full restart of the Mac (two of them; it starts at login and keeps
+  its permission).
   Reconnecting after a real auto-update relaunch is expected to work the same way, but check your own log the
   first time it happens.
 
@@ -149,8 +151,10 @@ tail ~/Library/Logs/fushicho.log                              # やったこと�
   複数のやり取りを同時につないでいる場合、ほかは切れたままです
 - これは回避策です。Claude 本体のアップデートで、立ち上げ直しのあともリモートコントロールが自動で復帰するように
   改善されたら、この道具はもう要りません。そのときは外してください
-- 確かめた環境: Claude デスクトップ 2.31226.1、macOS 26（Intel と Apple シリコン）。手で終了して開き直した場合と、
-  Mac 本体を再起動した場合（ログイン時に自分で立ち上がり、許可も残る）に、つなぎ直すことは確認済み。
+- 確かめた環境: Claude デスクトップ 2.31226.1、macOS 26。Mac 3 台（Intel の iMac、Apple シリコンの iMac、
+  Apple シリコンの MacBook Air）で、インストーラーは 3 台とも手直しなしで通りました。
+  手で終了して開き直した場合（3 台とも）と、Mac 本体を再起動した場合（うち 2 台。ログイン時に自分で立ち上がり、
+  許可も残る）に、つなぎ直すことは確認済み。
   自動アップデートでの立ち上げ直しも同じ動きになるはずですが、最初の 1 回は自分のログで確かめてください
 
 MIT ライセンスです（`LICENSE`）。無保証で、使って起きた不具合や損害について作者は責任を負いません。自分の判断で使ってください。
