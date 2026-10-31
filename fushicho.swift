@@ -19,7 +19,7 @@ import Carbon
 import CoreGraphics
 import Foundation
 
-let VERSION = "0.2.0"
+let VERSION = "0.2.1"
 let CLAUDE_BUNDLE = "com.anthropic.claudefordesktop"
 let CLAUDE_LOG_DIR = NSHomeDirectory() + "/Library/Logs/Claude/"
 let CLAUDE_LOG = CLAUDE_LOG_DIR + "main.log"
@@ -574,6 +574,10 @@ if args.contains("--help") || args.contains("-h") {
       --version
     Pause:  touch "\(PAUSED_FLAG)"      Resume: delete that file.
     """); exit(0)
+}
+if !args.isEmpty {
+    // Anything else (a typo such as "status" without the dashes) must not start a second watcher.
+    print("Unknown option: \(args.joined(separator: " "))  See: fushicho --help"); exit(2)
 }
 
 // MARK: - Agent
