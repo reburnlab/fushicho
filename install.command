@@ -2,7 +2,8 @@
 # fushicho installer (also the updater: run it again after pulling a new version).
 # Double-click it in Finder, or run it in Terminal.
 #   1. makes a signing certificate that lives only on this Mac (first time only; macOS asks for your password once)
-#   2. builds fushicho and puts it in ~/Library/Application Support/fushicho/
+#   2. builds fushicho (or, without the Xcode Command Line Tools, uses the ready-built prebuilt/fushicho
+#      from the release zip) and puts it in ~/Library/Application Support/fushicho/
 #   3. registers a login agent (local.fushicho) so it starts by itself
 #   4. opens the Accessibility settings so you can switch it on
 # Signing with the same local certificate every time means the Accessibility permission survives updates.
@@ -22,10 +23,17 @@ stop() { printf '\n\033[31m%s\033[0m\n\n' "$(t "$1" "$2")"; read -r -p "$(t 'Ent
 
 say "fushicho を入れます。" "Installing fushicho."
 
-if ! xcrun --find swiftc >/dev/null 2>&1; then
-  xcode-select --install >/dev/null 2>&1
-  stop "開発ツールが入っていません。今出たダイアログで「インストール」を押して、終わったらもう一度これを実行してください。" \
-       "The Xcode Command Line Tools are missing. Click Install in the dialog that just appeared, then run this again."
+# Build from source when the developer tools are there; otherwise use the ready-built binary from the release zip.
+# (Checked with xcode-select first: calling xcrun without the tools pops up an install dialog.)
+PREBUILT=""
+if ! { xcode-select -p >/dev/null 2>&1 && xcrun --find swiftc >/dev/null 2>&1; }; then
+  if [ -f prebuilt/fushicho ]; then
+    PREBUILT=prebuilt/fushicho
+  else
+    xcode-select --install >/dev/null 2>&1
+    stop "開発ツールが入っていません。今出たダイアログで「インストール」を押して、終わったらもう一度これを実行してください。（開発ツールなしで入れるなら、Releases の zip を使ってください）" \
+         "The Xcode Command Line Tools are missing. Click Install in the dialog that just appeared, then run this again. (To install without them, use the zip from Releases.)"
+  fi
 fi
 [ -d /Applications/Claude.app ] || say "（注意）/Applications に Claude のアプリが見つかりません。入れてから使ってください。" \
                                         "(Note) Claude.app was not found in /Applications. Install it before relying on fushicho."
@@ -58,10 +66,18 @@ CNF
 fi
 
 # 2. build + sign + install
-say "ビルドします（1 分ほど）。キーチェーンの確認が出たら、パスワードを打って「常に許可」を押してください。" \
-    "Building (about a minute). If a keychain prompt appears, enter your password and choose Always Allow."
 mkdir -p build "$APPDIR" "$HOME/Library/LaunchAgents" "$HOME/Library/Logs"
-swiftc -O fushicho.swift -o build/fushicho || stop "ビルドに失敗しました。" "The build failed."
+if [ -n "$PREBUILT" ]; then
+  say "組み立て済みのプログラムを使います。キーチェーンの確認が出たら、パスワードを打って「常に許可」を押してください。" \
+      "Using the ready-built binary. If a keychain prompt appears, enter your password and choose Always Allow."
+  cp "$PREBUILT" build/fushicho && chmod 755 build/fushicho || stop "プログラムを用意できませんでした。" "Could not prepare the binary."
+  # You chose to install by opening this script, so drop the download mark; it is re-signed with your local certificate below.
+  xattr -d com.apple.quarantine build/fushicho 2>/dev/null
+else
+  say "ビルドします（1 分ほど）。キーチェーンの確認が出たら、パスワードを打って「常に許可」を押してください。" \
+      "Building (about a minute). If a keychain prompt appears, enter your password and choose Always Allow."
+  swiftc -O fushicho.swift -o build/fushicho || stop "ビルドに失敗しました。" "The build failed."
+fi
 codesign -f -s "$CERT" -i "$ID" build/fushicho || stop "署名に失敗しました。" "Signing failed."
 launchctl bootout "gui/$(id -u)/$ID" 2>/dev/null
 cp build/fushicho "$BIN" || stop "プログラムを置けませんでした。" "Could not install the binary."

@@ -107,10 +107,17 @@ Rules
 whether anything is sent off the machine, and whether anything differs from this README. You should not have to
 take a stranger's word for it. (That review is a second opinion, not a guarantee.)
 
-Requirements: macOS 12 or later, the Xcode Command Line Tools, the Claude desktop app.
+Requirements: macOS 12 or later, the Claude desktop app. Building from source also needs the Xcode Command Line Tools;
+the release zip does not.
 
-1. Download this folder.
-2. Double-click **`install.command`**. It builds fushicho on your Mac (Intel or Apple silicon).
+1. Download either
+   - the zip from [Releases](https://github.com/reburnlab/fushicho/releases/latest) (no developer tools needed), or
+   - this folder (builds from source).
+2. Double-click **`install.command`**. If the Xcode Command Line Tools are installed, it builds fushicho on your Mac
+   (Intel or Apple silicon). If not, it uses `prebuilt/fushicho` from the zip, built from the same `fushicho.swift`
+   for both Intel and Apple silicon; its SHA-256 is in the release notes.
+   If macOS says it cannot verify the developer: close the message, open *System Settings → Privacy & Security*,
+   click **Open Anyway** next to `install.command`, and confirm. fushicho is not notarized by Apple, so this happens once.
 3. macOS asks for your password once (to trust a signing certificate that is created on, and never leaves,
    your Mac). If a keychain prompt appears during the build, choose **Always Allow**.
 4. System Settings opens at *Privacy & Security → Accessibility*. Switch **fushicho** on, go back to the
@@ -230,10 +237,17 @@ Claude のデスクトップアプリの予約タスク（Code タブ → スケ
 この説明と違う動きがないかを確かめてください。知らない人の言うことを、そのまま信じる必要はありません。
 （Claude の確認は参考で、保証ではありません。）
 
-必要なもの: macOS 12 以上、Xcode Command Line Tools、Claude のデスクトップアプリ。
+必要なもの: macOS 12 以上、Claude のデスクトップアプリ。ソースから組み立てるときは Xcode Command Line Tools も
+（Releases の zip なら要りません）。
 
-1. このフォルダを手元に置く
-2. **`install.command`** をダブルクリック（その Mac の上で組み立てます。Intel でも Apple シリコンでも同じ）
+1. どちらかを手元に置く
+   - [Releases](https://github.com/reburnlab/fushicho/releases/latest) の zip（開発ツールなしで入れられる）
+   - このフォルダ（ソースから組み立てる）
+2. **`install.command`** をダブルクリック。Xcode Command Line Tools が入っていれば、その Mac の上で組み立てます
+   （Intel でも Apple シリコンでも同じ）。入っていなければ、zip の `prebuilt/fushicho` を使います。
+   同じ `fushicho.swift` から Intel と Apple シリコンの両方向けに組み立てたもので、SHA-256 はリリースの説明にあります。
+   「開発元を確認できない」と出たら、その表示を閉じて「システム設定 → プライバシーとセキュリティ」を開き、
+   `install.command` の横の「このまま開く」を押して確かめてください。Apple の公証を受けていないので、最初の 1 回だけ出ます。
 3. macOS がパスワードを 1 回聞きます（この Mac の中だけに作る署名用の証明書を信頼するため）。
    ビルド中にキーチェーンの確認が出たら「常に許可」
 4. システム設定の「プライバシーとセキュリティ → アクセシビリティ」が開くので、**fushicho** をオンにして、

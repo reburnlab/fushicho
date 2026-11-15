@@ -19,7 +19,7 @@ import Carbon
 import CoreGraphics
 import Foundation
 
-let VERSION = "0.2.1"
+let VERSION = "0.2.2"
 let CLAUDE_BUNDLE = "com.anthropic.claudefordesktop"
 let CLAUDE_LOG_DIR = NSHomeDirectory() + "/Library/Logs/Claude/"
 let CLAUDE_LOG = CLAUDE_LOG_DIR + "main.log"
