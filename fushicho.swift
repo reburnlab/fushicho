@@ -19,15 +19,17 @@ import Carbon
 import CoreGraphics
 import Foundation
 
-let VERSION = "0.2.2"
+let VERSION = "0.2.3"
 let CLAUDE_BUNDLE = "com.anthropic.claudefordesktop"
-let CLAUDE_LOG_DIR = NSHomeDirectory() + "/Library/Logs/Claude/"
+// FUSHICHO_HOME: run against a copy of the folders below (for testing); normally the user's home.
+let HOME_DIR = ProcessInfo.processInfo.environment["FUSHICHO_HOME"] ?? NSHomeDirectory()
+let CLAUDE_LOG_DIR = HOME_DIR + "/Library/Logs/Claude/"
 let CLAUDE_LOG = CLAUDE_LOG_DIR + "main.log"
-let SUPPORT = NSHomeDirectory() + "/Library/Application Support/fushicho/"
+let SUPPORT = HOME_DIR + "/Library/Application Support/fushicho/"
 let PAUSED_FLAG = SUPPORT + "paused"            // touch this file to pause the watcher
 let NOW_FLAG = SUPPORT + "recover-now"          // created by `fushicho --now`
 let STATUS_FILE = SUPPORT + "status.json"
-let LOG_FILE = NSHomeDirectory() + "/Library/Logs/fushicho.log"
+let LOG_FILE = HOME_DIR + "/Library/Logs/fushicho.log"
 let DAWN_FILE = SUPPORT + "dawn-last"            // the morning relay's last report (fushicho --report)
 let SHARE_FILE = SUPPORT + "share-to"            // optional: a folder path; the status is also written there as <Mac name>.json
 
@@ -528,8 +530,22 @@ func tick() {
 let args = Array(CommandLine.arguments.dropFirst())
 if args.contains("--version") { print("fushicho \(VERSION)"); exit(0) }
 if args.contains("--status") {
-    if let d = try? String(contentsOfFile: STATUS_FILE, encoding: .utf8) { print(d) }
-    else { print("No status yet. Is the agent running?  (launchctl print gui/$(id -u)/local.fushicho)") }
+    guard let d = try? Data(contentsOf: URL(fileURLWithPath: STATUS_FILE)),
+          var j = (try? JSONSerialization.jsonObject(with: d)) as? [String: Any] else {
+        print("No status yet. Is the agent running?  (launchctl print gui/$(id -u)/local.fushicho)"); exit(0)
+    }
+    // The agent writes its status file only every 30 seconds. Read the app log again here, so a caller that asks
+    // right after a relaunch (the morning relay) sees the sessions that relaunch cut, not the state from before it.
+    let w = Watch()
+    w.primeFromRotated()
+    w.refresh()
+    let s = w.snapshot()
+    j["remote_control"] = s.state; j["since"] = s.at.map { stamp.string(from: $0) } ?? ""
+    j["cut_by_relaunch"] = !s.cut.isEmpty; j["waiting_to_reconnect"] = s.cut; j["dawn_needed"] = s.cut
+    j["sessions"] = s.sessions
+    if let out = try? JSONSerialization.data(withJSONObject: j, options: [.prettyPrinted, .sortedKeys]) {
+        print(String(decoding: out, as: UTF8.self))
+    }
     exit(0)
 }
 if args.contains("--explain") {
@@ -568,7 +584,7 @@ if args.contains("--help") || args.contains("-h") {
     print("""
     fushicho \(VERSION) — keeps Remote Control alive in the Claude desktop app.
       (no arguments)  run the watcher (this is what the login agent runs)
-      --status        show what the agent last saw
+      --status        show the current state (re-reads the app log on the spot)
       --now           ask the running agent to reconnect right away
       --report TEXT   record what the morning relay (a scheduled Claude task) did, in fushicho's log
       --version

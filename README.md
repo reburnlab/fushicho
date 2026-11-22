@@ -133,7 +133,7 @@ The signing certificate stays in your keychain after uninstalling. To delete it 
 Nothing to do — it runs at login.
 
 ```
-"~/Library/Application Support/fushicho/fushicho" --status    # what it last saw (incl. dawn_needed, dawn_last)
+"~/Library/Application Support/fushicho/fushicho" --status    # the current state, read from the app log on the spot (incl. dawn_needed, dawn_last)
 "~/Library/Application Support/fushicho/fushicho" --now       # reconnect right now
 "~/Library/Application Support/fushicho/fushicho" --explain   # replay the log: what each past relaunch would reconnect
 "~/Library/Application Support/fushicho/fushicho" --report "…"   # used by the morning relay
@@ -263,7 +263,7 @@ Claude のデスクトップアプリの予約タスク（Code タブ → スケ
 何もしなくて大丈夫です。ログイン時に自動で立ち上がります。
 
 ```
-"~/Library/Application Support/fushicho/fushicho" --status    # 最後に見た状態（dawn_needed・dawn_last も）
+"~/Library/Application Support/fushicho/fushicho" --status    # 今の状態（その場でアプリの記録を読み直す。dawn_needed・dawn_last も）
 "~/Library/Application Support/fushicho/fushicho" --now       # 今すぐつなぎ直す
 "~/Library/Application Support/fushicho/fushicho" --explain   # ログを読み直して、過去の立ち上げ直しで何を戻すはずだったか
 "~/Library/Application Support/fushicho/fushicho" --report "…"   # 朝の予約が使う
